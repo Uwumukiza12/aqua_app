@@ -1,67 +1,82 @@
-import React, {useEffect, useState} from 'react'
-import {ActivityIndicator, Text, View, Button, TextInput, ScrollView} from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
-import Axios from 'axios';
-function Orders() {
-    const [isLoading, setLoading]= useState(true);
-    const [data, setData] = useState([]);
-    //console.log('Hello error')
-    //axios
-    Axios({
-      method: "GET",
-      baseURL:
-        "http://192.168.137.121:3000/posts",
-    })
-      .then((res) =>{ setData(res)
-      alert(res)
-      })
-      .catch((err) => console.error(err));
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity } from "react-native";
 
-    //##################################################
-    // const getMovies = async () => {
-    //     try {
-    //     const response= await axios.get('http://192.168.137.121:3000/posts')
-        
-    //     // .then((data)=>{
-    //     //   console.log(JSON.stringify(response.data));
-    //     // setData(data);
-    //     //  })
-      
 
-    //     alert(JSON.stringify(response.data));
-    //      //console.log('Hello error')
-    //      //const json = await response.json();
-    //     //setData(json.posts);
-    //     // console.log('Hello error')
-    //    } catch (error) {
-    //      console.error(error);
-    //    } finally {
-    //      setLoading(false);
-    //    }
-    //  }
-    // useEffect(()=>{
-    //     getMovies();
-    // }, []);
-    //########################################################
+const DATA = [
+  {
+    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
+    title: "First Item",
+  },
+  {
+    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+    title: "Second Item",
+  },
+  {
+    id: "58694a0f-3da1-471f-bd96-145571e29d72",
+    title: "Third Item",
+  },
+];
+
+const Item = ({ item, onPress, backgroundColor, textColor }) => (
+  <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
+    <Text style={[styles.title, textColor]}>{item.title}</Text>
+  </TouchableOpacity>
+);
+
+const Orders = () => {
+  const [selectedId, setSelectedId] = useState(null);
+  const [data, setData] = useState([])
+  
+  useEffect(()=>{
+    const getPost = async ()=> { 
+    const response = await axios.get('http://192.168.0.100:3000/posts')
+   // const res = await response.json()
+console.log(response)
+    //setData(res)
+  } 
+  getPost()
+  },[])
+
+  const renderItem = ({ item }) => {
+    const backgroundColor = item.id === selectedId ? "#6e3b6e" : "#f9c2ff";
+    const color = item.id === selectedId ? 'white' : 'black';
+
     return (
-        <>
-        <View style={{ flex: 1, padding: 24,  }}>
-            
-              <FlatList
-              data={data}
-              keyExtractor={(id) => id.toString()}
-              renderItem={({ item }) => <Text>{item.title} hello</Text>}
-            />
-            
-
-          {/* <Button
-                title="Fetch data" onPress={getMovies}
-                /> */}
-          </View>
-    
-           
-        </>
+      <Item
+        item={item}
+        onPress={() => setSelectedId(item.id)}
+        backgroundColor={{ backgroundColor }}
+        textColor={{ color }}
+      />
     );
-}
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        extraData={selectedId}
+      />
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  item: {
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+});
 
 export default Orders;

@@ -10,6 +10,7 @@ import LoginScreen from './app/LoginScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Orders from './app/Orders';
 import TestApi from './app/TestApi';
+import News from './app/Components/News';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -39,6 +40,7 @@ export default function App() {
         <Drawer.Screen name="Login" component={LoginScreen} />
         <Drawer.Screen name="Orders" component={Orders} />
         <Drawer.Screen name="TestApi" component={TestApi} />
+        <Drawer.Screen name="News" component={News} />
       </Drawer.Navigator>
     </NavigationContainer>
     </>
